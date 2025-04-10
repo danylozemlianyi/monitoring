@@ -1,0 +1,81 @@
+{
+  "id": null,
+  "uid": "loki",
+  "title": "Loki Logs",
+  "tags": ["loki", "logs"],
+  "timezone": "browser",
+  "schemaVersion": 30,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "logs",
+      "title": "📝 All Logs ({job=\"varlogs\"})",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 10 },
+      "datasource": {
+        "type": "loki",
+        "uid": "Loki"
+      },
+      "targets": [
+        {
+          "expr": "{job=\"varlogs\"}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showLabels": true,
+        "showTime": true,
+        "wrapLogMessage": true,
+        "dedupStrategy": "none"
+      }
+    },
+    {
+      "type": "logs",
+      "title": "🚨 Errors, Fails, Panics",
+      "gridPos": { "x": 0, "y": 10, "w": 24, "h": 8 },
+      "datasource": {
+        "type": "loki",
+        "uid": "Loki"
+      },
+      "targets": [
+        {
+          "expr": "{job=\"varlogs\"} |= \"error\" or |= \"fail\" or |= \"panic\"",
+          "refId": "B"
+        }
+      ],
+      "options": {
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "dedupStrategy": "none",
+        "showTime": true
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "📈 Log Volume (lines/sec)",
+      "gridPos": { "x": 0, "y": 18, "w": 24, "h": 8 },
+      "datasource": {
+        "type": "loki",
+        "uid": "Loki"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "logs"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate({job=\"varlogs\"}[1m])",
+          "refId": "C"
+        }
+      ]
+    }
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  }
+}

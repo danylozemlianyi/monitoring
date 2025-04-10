@@ -25,3 +25,18 @@ services:
     volumes:
       - ./grafana-storage:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki-config.yaml
+    volumes:
+      - ./loki-config.yml:/etc/loki-config.yaml
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - /var/log:/var/log:ro
+      - ./promtail-config.yml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
